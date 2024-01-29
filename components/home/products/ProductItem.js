@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { PiShoppingCartLight } from 'react-icons/pi';
 
 export default function ProductItem({ product, assetFinder }) {
   const images = assetFinder(product.images);
@@ -25,10 +26,13 @@ export default function ProductItem({ product, assetFinder }) {
           />
         </div>
       </div>
-      <div className='information'>
+      <div className='information relative'>
         <h4>{product.name}</h4>
         <p className='text-sm opacity-70'>{product.category}</p>
         <p className='price font-bold'>{product.price} €</p>
+        <div className='add-icon text-2xl absolute bottom-0 right-5'>
+          <PiShoppingCartLight />
+        </div>
       </div>
     </div>
   );
