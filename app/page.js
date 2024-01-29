@@ -1,7 +1,9 @@
-export default function Home() {
+import ProductsList from '@/components/home/products/ProductsList';
+
+export default async function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      starting here
+    <main className='min-h-[70vh] p-12'>
+      <ProductsList />
     </main>
   );
 }
