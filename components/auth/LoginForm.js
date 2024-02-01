@@ -4,6 +4,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { authenticate } from '@/app/actions';
 
 // ui
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -15,6 +16,24 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { buttonVariants } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button disabled={pending} aria-disabled={pending} type='submit'>
+      {pending ? (
+        <>
+          <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+          Please wait
+        </>
+      ) : (
+        <span>Login</span>
+      )}
+    </Button>
+  );
+}
 
 export default function LoginForm() {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
@@ -42,16 +61,20 @@ export default function LoginForm() {
                 placeholder='enter your password here'
               />
             </div>
-            <Button aria-disabled={pending} type='submit'>
-              Login
-            </Button>
+            <SubmitButton />
+            <Link
+              href='/register'
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              Register
+            </Link>
           </div>
         </form>
       </CardContent>
       <CardFooter>
-        <div className='footer-buttons flex justify-between w-full'>
-          <Button variant='outline'>Register</Button>
-        </div>
+        <p className='text-xs opacity-70'>
+          You can create your account by clicking the Register button above.
+        </p>
         <div
           className='flex h-8 items-end space-x-1'
           aria-live='polite'
