@@ -24,6 +24,7 @@ export default async function ProductsList() {
         products.map((product, index) => (
           <ProductItem
             key={index}
+            productId={product.sys.id}
             product={product.fields}
             assetFinder={assetFinder}
           />

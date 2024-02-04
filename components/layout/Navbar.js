@@ -11,7 +11,9 @@ export default async function Navbar() {
 
   return (
     <nav className='flex justify-between items-center py-8 px-12 relative'>
-      <div className='font-bold text-2xl'>Fjallraven</div>
+      <Link href='/' className='font-bold text-2xl'>
+        Fjallraven
+      </Link>
       <div>
         {isLoggedIn ? (
           <form
