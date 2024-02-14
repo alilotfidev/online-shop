@@ -1,11 +1,19 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { PiShoppingCartLight } from 'react-icons/pi';
+import AddToCartButton from '@/components/cart/AddToCartButton';
 
-export default function ProductItem({ product, assetFinder, productId }) {
+export default function ProductItem({
+  product,
+  assetFinder,
+  productId,
+  getPriceId,
+}) {
   const images = assetFinder(product.images);
   const mainImage = images[0].fields.file;
   const secondaryImage = images[1].fields.file;
+
+  const stripeProductId = getPriceId(product.name, product.price);
   return (
     <div className='flex flex-col gap-3'>
       <Link href={`/products/${productId}`}>
@@ -34,10 +42,21 @@ export default function ProductItem({ product, assetFinder, productId }) {
         </Link>
         <p className='text-sm opacity-70'>{product.category}</p>
         <p className='price font-bold'>{product.price} €</p>
-        <div className='add-icon text-2xl absolute bottom-0 right-5'>
-          <PiShoppingCartLight />
+        <div className='add-icon text-2xl absolute bottom-0 right-5 cursor-pointer'>
+          <AddToCartButton
+            name={product.name}
+            description=''
+            currency={'EUR'}
+            image={`https:${mainImage?.url}`}
+            price={product.price}
+            price_id={stripeProductId}
+          >
+            <PiShoppingCartLight />
+          </AddToCartButton>
         </div>
       </div>
     </div>
   );
 }
+
+//             price_id={stripeProductId}
