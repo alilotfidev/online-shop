@@ -1,9 +1,11 @@
 import { notFound } from 'next/navigation';
 import { getSingleEntry, getSingleAsset } from '@/lib/contentful';
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { getStripePrices } from '@/lib/stripe';
+import AddToCartButton from '@/components/cart/AddToCartButton';
 
 // ui
 import Image from 'next/image';
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { MdOutlineAddShoppingCart } from 'react-icons/md';
 import {
   Card,
@@ -22,9 +24,13 @@ export default async function ProductPage({ params }) {
   }
 
   const product = await getSingleEntry(productId);
-  console.log(product.fields);
   const firstImage = await getSingleAsset(product?.fields?.images[0].sys.id);
   const secondImage = await getSingleAsset(product?.fields?.images[1].sys.id);
+
+  const prices = await getStripePrices();
+  const stripeProductId = prices.data.find(
+    (price) => price.unit_amount_decimal === `${product.fields.price}00`
+  ).id;
 
   return (
     <div className='productPage p-12 flex flex-col sm:flex-row gap-6'>
@@ -58,9 +64,19 @@ export default async function ProductPage({ params }) {
             <p className='price text-lg font-semibold'>
               {product.fields.price} €
             </p>
-            <Button>
-              <MdOutlineAddShoppingCart className='mr-2 h-4 w-4' /> Add to cart
-            </Button>
+            <AddToCartButton
+              name={product.fields.name}
+              description=''
+              currency={'EUR'}
+              image={`https:${firstImage?.fields.file.url}`}
+              price={product.fields.price}
+              price_id={stripeProductId}
+            >
+              <Button>
+                <MdOutlineAddShoppingCart className='mr-2 h-4 w-4' /> Add to
+                cart
+              </Button>
+            </AddToCartButton>
           </div>
         </CardFooter>
       </Card>

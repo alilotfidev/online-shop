@@ -3,6 +3,8 @@ import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
+import CartProvider from '@/components/providers/CartProvider';
+import ShoppingCartModal from '@/components/cart/ShoppingCartModal';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,9 +22,12 @@ export default function RootLayout({ children }) {
           defaultTheme='dark'
           disableTransitionOnChange
         >
-          <Navbar />
-          {children}
-          <Footer />
+          <CartProvider>
+            <Navbar />
+            <ShoppingCartModal />
+            {children}
+            <Footer />
+          </CartProvider>
         </ThemeProvider>
       </body>
     </html>
