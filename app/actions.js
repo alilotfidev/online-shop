@@ -53,3 +53,7 @@ export async function register(prevState, formData) {
   }
   redirect('/', RedirectType.push);
 }
+
+export async function createOrder(prevState, formData) {
+  console.log(formData);
+}
