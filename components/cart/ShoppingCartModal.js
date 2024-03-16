@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 import {
   Sheet,
@@ -11,6 +12,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { useShoppingCart, formatCurrencyString } from 'use-shopping-cart';
+import { buttonVariants } from '@/components/ui/button';
 
 export default function ShoppingCartModal() {
   const {
@@ -20,43 +22,10 @@ export default function ShoppingCartModal() {
     cartDetails,
     removeItem,
     totalPrice,
-    redirectToCheckout,
   } = useShoppingCart();
 
   const items = Object.values(cartDetails ?? {}).map((entry) => entry.price_id);
 
-  async function handleCheckoutClick(event) {
-    event.preventDefault();
-
-    try {
-      const items = Object.values(cartDetails ?? {});
-      const formattedItems = items.map((item) => {
-        return { price: item.price_id, quantity: item.quantity };
-      });
-      console.log(formattedItems);
-      const session = await fetch('http://localhost:3000/api/stripeSession', {
-        method: 'POST',
-        body: JSON.stringify(formattedItems),
-        headers: {
-          'content-type': 'application/json',
-        },
-      });
-      const sessionJson = await session.json();
-      console.log(sessionJson);
-      if (sessionJson.error) {
-        throw new Error(sessionJson.error);
-      } else {
-        const result = await redirectToCheckout({
-          sessionId: sessionJson.sessionId,
-        });
-        if (result?.error) {
-          console.log('result');
-        }
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-  }
   return (
     <div>
       <Sheet
@@ -127,17 +96,20 @@ export default function ShoppingCartModal() {
               </p>
 
               <div className='mt-6'>
-                <Button
-                  onClick={handleCheckoutClick}
-                  className='w-full bg-black text-white'
+                <Link
+                  href='/order'
+                  onClick={() => handleCartClick()}
+                  className={buttonVariants({
+                    className: 'w-full',
+                  })}
                 >
-                  Pay now
-                </Button>
+                  Checkout
+                </Link>
               </div>
 
-              <div className='mt-6 flex justify-center text-center text-sm text-gray-500'>
+              <div className='mt-6 flex justify-center text-center text-sm'>
                 <Button
-                  className='w-full mt-4'
+                  className='w-full mt-4 bg-black text-white'
                   onClick={() => handleCartClick()}
                 >
                   Continue shopping

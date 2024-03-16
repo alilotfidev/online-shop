@@ -9,10 +9,9 @@ export async function POST(req) {
     const session = await stripe.checkout.sessions.create({
       line_items: body,
       mode: 'payment',
-      success_url: `${req.nextUrl.origin}/?success=true`,
-      cancel_url: `${req.nextUrl.origin}/?canceled=true`,
+      success_url: `http://localhost:3000/order/successful?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `http://localhost:3000/order/failed?session_id={CHECKOUT_SESSION_ID}`,
     });
-
     return NextResponse.json({ sessionId: session.id }, { status: 200 });
   } catch (err) {
     return NextResponse.json(
