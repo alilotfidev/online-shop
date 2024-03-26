@@ -3,9 +3,14 @@
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 import bcrypt from 'bcrypt';
-import { createCustomer } from '@/lib/contentful';
+import { createCustomer, createOrderEntry } from '@/lib/contentful';
 import { redirect } from 'next/navigation';
 import { RedirectType } from 'next/dist/client/components/redirect';
+import {
+  generateRandomString,
+  getYYYYMMDD,
+  getISODateString,
+} from '@/lib/helpers';
 
 export async function authenticate(prevState, formData) {
   try {
@@ -55,5 +60,42 @@ export async function register(prevState, formData) {
 }
 
 export async function createOrder(prevState, formData) {
-  console.log(formData);
+  const orderFields = {
+    country: { 'en-US': formData.get('country') },
+    city: { 'en-US': formData.get('city') },
+    zipCode: { 'en-US': formData.get('zip') },
+    address: { 'en-US': formData.get('address') },
+    status: { 'en-US': 'not-paid' },
+    isPaid: { 'en-US': false },
+  };
+  // // adding the order id
+  const randomString = generateRandomString(4);
+  const date = getYYYYMMDD();
+  const orderId = `ORD-${date}-${randomString}`;
+  orderFields['orderId'] = { 'en-US': orderId };
+
+  // adding the order date
+  const isoDate = getISODateString();
+  orderFields['orderDate'] = { 'en-US': isoDate };
+
+  // linking the customer
+  const customerId = formData.get('CustomerId');
+  orderFields['customer'] = {
+    'en-US': {
+      sys: {
+        type: 'Link',
+        linkType: 'Entry',
+        id: customerId,
+      },
+    },
+  };
+
+  try {
+    const newOrder = await createOrderEntry(orderFields);
+    console.log({ newOrder });
+  } catch (error) {
+    console.log(error);
+    return 'Something went wrong :(';
+  }
+  redirect(`/order/confirmation?order_id=${orderId}`);
 }

@@ -25,9 +25,8 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
 
-export default function InformationForm({ user }) {
+export default function InformationForm({ user, userId }) {
   const [errorMessage, dispatch] = useFormState(createOrder, undefined);
-
   return (
     <div>
       <Card>
@@ -36,6 +35,8 @@ export default function InformationForm({ user }) {
         </CardHeader>
         <CardContent>
           <form action={dispatch}>
+            <input type='hidden' name='CustomerId' value={userId} />
+
             <div className='grid grid-cols-2 w-full items-center gap-4'>
               <div className='flex flex-col space-y-1.5'>
                 <Label htmlFor='firstName'>First Name</Label>
@@ -103,7 +104,7 @@ export default function InformationForm({ user }) {
                   name='city'
                   placeholder='Eindhoven'
                   type='text'
-                  value={user?.city}
+                  defaultValue={user?.city}
                 />
               </div>
               <div className='flex flex-col space-y-1.5'>
@@ -113,7 +114,7 @@ export default function InformationForm({ user }) {
                   name='zip'
                   placeholder='ZIP Code'
                   type='text'
-                  value={user?.zipCode}
+                  defaultValue={user?.zipCode}
                 />
               </div>
               <div className='col-span-2 flex flex-col space-y-1.5'>
@@ -122,7 +123,7 @@ export default function InformationForm({ user }) {
                   placeholder='Type your address here.'
                   id='address'
                   name='address'
-                  value={user?.address}
+                  defaultValue={user?.address}
                 />
                 <p className='text-sm text-muted-foreground'>
                   Please type your address with details here.
