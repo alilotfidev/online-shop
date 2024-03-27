@@ -65,6 +65,7 @@ export default async function ProductPage({ params }) {
               {product.fields.price} €
             </p>
             <AddToCartButton
+              SKU={product.fields.sku}
               name={product.fields.name}
               description=''
               currency={'EUR'}

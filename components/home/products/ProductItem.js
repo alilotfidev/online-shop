@@ -12,7 +12,6 @@ export default function ProductItem({
   const images = assetFinder(product.images);
   const mainImage = images[0].fields.file;
   const secondaryImage = images[1].fields.file;
-
   const stripeProductId = getPriceId(product.name, product.price);
   return (
     <div className='flex flex-col gap-3'>
@@ -44,6 +43,7 @@ export default function ProductItem({
         <p className='price font-bold'>{product.price} €</p>
         <div className='add-icon text-2xl absolute bottom-0 right-5 cursor-pointer'>
           <AddToCartButton
+            SKU={product.sku}
             name={product.name}
             description=''
             currency={'EUR'}

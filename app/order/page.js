@@ -1,8 +1,4 @@
 'use client';
-import { loadStripe } from '@stripe/stripe-js';
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-);
 
 import { useShoppingCart } from 'use-shopping-cart';
 
@@ -149,41 +145,3 @@ export default function Order() {
     </div>
   );
 }
-
-// const items = Object.values(cartDetails ?? {});
-// const formattedItems = items.map((item) => {
-//   return { price: item.price_id, quantity: item.quantity };
-// });
-// console.log(formattedItems);
-// const session = await fetch(
-//   `${process.env.NEXT_PUBLIC_BASE_URL}/api/stripeSession/create`,
-//   {
-//     method: 'POST',
-//     body: JSON.stringify(formattedItems),
-//     headers: {
-//       'content-type': 'application/json',
-//     },
-//   }
-// );
-// const sessionJson = await session.json();
-// console.log(sessionJson);
-// if (sessionJson.error) {
-//   throw new Error(sessionJson.error);
-// } else {
-//   console.log({ result: sessionJson });
-//   const stripe = await stripePromise;
-//   const { error } = await stripe.redirectToCheckout({
-//     sessionId: sessionJson.sessionId,
-//   });
-//   if (error) {
-//     if (error instanceof Error) throw new Error(error.message);
-//   } else {
-//     throw error;
-//   }
-//   // const result = await redirectToCheckout({
-//   //   sessionId: sessionJson.sessionId,
-//   // });
-//   // if (result?.error) {
-//   //   console.log('result');
-//   // }
-// }

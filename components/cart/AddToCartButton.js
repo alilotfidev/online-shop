@@ -3,6 +3,7 @@ import { useShoppingCart } from 'use-shopping-cart';
 
 export default function AddToCartButton({
   children,
+  SKU,
   name,
   currency,
   description,
@@ -11,8 +12,8 @@ export default function AddToCartButton({
   price_id,
 }) {
   const { addItem, handleCartClick } = useShoppingCart();
-
   const product = {
+    SKU: SKU,
     name: name,
     description: description,
     price: price,
