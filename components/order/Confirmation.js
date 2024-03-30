@@ -28,7 +28,7 @@ export default function Confirmation({ orderId }) {
     const formattedItems = items.map((item) => {
       return { sku: item.SKU, quantity: item.quantity };
     });
-    const orderData = { items: formattedItems, orderId };
+    const orderData = { items: formattedItems, orderId, totalPrice };
     // make a request to api
     try {
       const response = await fetch('/api/orders/update', {

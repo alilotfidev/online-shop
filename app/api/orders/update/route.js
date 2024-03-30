@@ -7,7 +7,11 @@ export async function POST(req) {
   try {
     const body = await req.json();
     console.log(body);
-    await addProductsToOrder(body.orderId, { items: body.items });
+    await addProductsToOrder(
+      body.orderId,
+      { items: body.items },
+      body.totalPrice
+    );
     return NextResponse.json(
       { message: 'order updated successfully.' },
       { status: 200 }
