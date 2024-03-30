@@ -4,7 +4,7 @@ import Confirmation from '@/components/order/Confirmation';
 
 import { getOrder } from '@/lib/contentful';
 
-export default async function Order1({ params, searchParams }) {
+export default async function Order({ params, searchParams }) {
   const step = params?.step || null;
   const isInformation = step === 'information';
   const isConfirmation = step === 'confirmation';

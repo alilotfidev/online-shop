@@ -19,7 +19,7 @@ export default async function SuccessfulOrderPage({ searchParams }) {
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/stripeSession/${sessionId}`
   );
   const sessionData = await sessionRes.json();
-  console.log(sessionData.items);
+  console.log({ sessionData });
   // TODO: error handling & add images to stripe
   return (
     <div className='p-24 flex justify-center items-center'>

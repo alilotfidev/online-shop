@@ -97,7 +97,7 @@ export default function ShoppingCartModal() {
 
               <div className='mt-6'>
                 <Link
-                  href='/order'
+                  href='/order/information'
                   onClick={() => handleCartClick()}
                   className={buttonVariants({
                     className: 'w-full',

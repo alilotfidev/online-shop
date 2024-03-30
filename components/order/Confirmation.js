@@ -4,6 +4,8 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
+import { useState } from 'react';
+
 import { useShoppingCart } from 'use-shopping-cart';
 
 // ui
@@ -17,12 +19,15 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 
 export default function Confirmation({ orderId }) {
   // error handling for when the order doesn't exsists
   const { cartCount, cartDetails, totalPrice } = useShoppingCart();
+  const [isLoading, setIsLoading] = useState(false);
 
   const updateOrder = async () => {
+    setIsLoading(true);
     //  adding products to the order
     const items = Object.values(cartDetails ?? {});
     const formattedItems = items.map((item) => {
@@ -43,6 +48,7 @@ export default function Confirmation({ orderId }) {
       }
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
 
@@ -68,6 +74,7 @@ export default function Confirmation({ orderId }) {
     } else {
       console.log({ result: sessionJson });
       const stripe = await stripePromise;
+      setIsLoading(false);
       const { error } = await stripe.redirectToCheckout({
         sessionId: sessionJson.sessionId,
       });
@@ -77,6 +84,7 @@ export default function Confirmation({ orderId }) {
         throw error;
       }
     }
+    setIsLoading(false);
   };
 
   return (
@@ -125,11 +133,32 @@ export default function Confirmation({ orderId }) {
             <p>Total Price:</p>
             <p>{totalPrice} EUR</p>
           </div>
-          <Button className='w-full mt-4 font-bold' onClick={updateOrder}>
+          <SubmitButton isLoading={isLoading} updateOrder={updateOrder} />
+          {/* <Button className='w-full mt-4 font-bold' onClick={updateOrder}>
             Pay
-          </Button>
+          </Button> */}
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+function SubmitButton({ isLoading, updateOrder }) {
+  return (
+    <Button
+      disabled={isLoading}
+      aria-disabled={isLoading}
+      className='w-full mt-4 font-bold'
+      onClick={updateOrder}
+    >
+      {isLoading ? (
+        <>
+          <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+          Please wait
+        </>
+      ) : (
+        <span>Pay</span>
+      )}
+    </Button>
   );
 }
