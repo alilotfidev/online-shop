@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getSingleEntry, getSingleAsset } from '@/lib/contentful';
+import { getProduct, getSingleAsset } from '@/lib/contentful';
 import { getStripePrices } from '@/lib/stripe';
 import AddToCartButton from '@/components/cart/AddToCartButton';
 
@@ -19,11 +19,14 @@ import { Button } from '@/components/ui/button';
 
 export default async function ProductPage({ params }) {
   const productId = params.product || null;
+
   if (!productId) {
     notFound();
   }
 
-  const product = await getSingleEntry(productId);
+  const res = await getProduct(productId);
+  const product = res?.items[0];
+  console.log({ product });
   const firstImage = await getSingleAsset(product?.fields?.images[0].sys.id);
   const secondImage = await getSingleAsset(product?.fields?.images[1].sys.id);
 
