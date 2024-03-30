@@ -37,7 +37,7 @@ export default function Confirmation({ orderId }) {
         body: JSON.stringify(orderData),
       });
       if (response.ok) {
-        await handlePayment();
+        await handlePayment(orderId);
       } else {
         throw new Error('Something went wrong.');
       }
@@ -46,17 +46,17 @@ export default function Confirmation({ orderId }) {
     }
   };
 
-  const handlePayment = async () => {
+  const handlePayment = async (orderId) => {
     const items = Object.values(cartDetails ?? {});
     const formattedItems = items.map((item) => {
       return { price: item.price_id, quantity: item.quantity };
     });
-    console.log(formattedItems);
+    const sessionPayload = { items: formattedItems, orderId };
     const session = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/stripeSession/create`,
       {
         method: 'POST',
-        body: JSON.stringify(formattedItems),
+        body: JSON.stringify(sessionPayload),
         headers: {
           'content-type': 'application/json',
         },

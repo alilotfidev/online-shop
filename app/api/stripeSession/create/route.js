@@ -7,10 +7,13 @@ export async function POST(req) {
     const body = await req.json();
     // Create Checkout Sessions from body params.
     const session = await stripe.checkout.sessions.create({
-      line_items: body,
+      line_items: body?.items,
       mode: 'payment',
       success_url: `http://localhost:3000/order/successful?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `http://localhost:3000/order/failed?session_id={CHECKOUT_SESSION_ID}`,
+      metadata: {
+        order_id: body?.orderId,
+      },
     });
     return NextResponse.json({ sessionId: session.id }, { status: 200 });
   } catch (err) {
