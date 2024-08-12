@@ -86,7 +86,6 @@ export default function Confirmation({ orderId }) {
     }
     setIsLoading(false);
   };
-
   return (
     <div className='flex justify-center items-center'>
       <Card className='order-overview'>

@@ -47,7 +47,7 @@ export default async function SuccessfulOrderPage({ searchParams }) {
               {sessionData?.items.map((item, index) => (
                 <div
                   key={index}
-                  className='flex justify-between text-sm border border-white border-opacity-10 rounded-lg p-2'
+                  className='flex justify-between text-sm border border-white border-opacity-10 rounded-lg p-2 my-2'
                 >
                   <div className='flex flex-col gap-2'>
                     <span>{item?.description}</span>
