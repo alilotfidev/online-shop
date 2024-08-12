@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req) {
   try {
-    const baseUrl = process.env.BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     const body = await req.json();
     // Create Checkout Sessions from body params.
     const session = await stripe.checkout.sessions.create({
