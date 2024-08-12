@@ -4,13 +4,14 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req) {
   try {
+    const baseUrl = process.env.BASE_URL;
     const body = await req.json();
     // Create Checkout Sessions from body params.
     const session = await stripe.checkout.sessions.create({
       line_items: body?.items,
       mode: 'payment',
-      success_url: `http://localhost:3000/order/successful?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `http://localhost:3000/order/failed?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${baseUrl}/order/successful?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/order/failed?session_id={CHECKOUT_SESSION_ID}`,
       metadata: {
         order_id: body?.orderId,
       },
