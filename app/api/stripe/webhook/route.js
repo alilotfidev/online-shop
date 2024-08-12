@@ -1,14 +1,21 @@
 // TODO: secure the webhook after live setup with stripe signature
 import { NextResponse } from 'next/server';
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const endpointSecret = process.env.STRIPE_WEBHOOK_KEY;
 import { getOrder, setOrderPaymentStatus } from '@/lib/contentful';
 
 export async function POST(req) {
-  const event = await req.json();
-  //   const signature = req.headers['stripe-signature'];
+  const signature = req.headers['stripe-signature'];
 
   try {
-    console.log(event.data.object.metadata);
+    const eventJSON = await req.json();
+    console.log(eventJSON.data.object.metadata);
+
+    const event = stripe.webhooks.constructEvent(
+      eventJSON,
+      signature,
+      endpointSecret
+    );
 
     // Handle the event based on its type (e.g., charge.succeeded)
     switch (event.type) {
@@ -18,6 +25,8 @@ export async function POST(req) {
         console.log('Payment successful:', succeededCharge);
         // updating the database
         const succeededOrderId = succeededCharge?.metadata?.order_id || null;
+        console.log(event.data.object);
+
         if (succeededOrderId) {
           const order = await getOrder(succeededOrderId);
           const entryId = order?.items[0]?.sys.id || null;
