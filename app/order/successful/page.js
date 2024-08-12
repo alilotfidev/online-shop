@@ -66,9 +66,14 @@ export default async function SuccessfulOrderPage({ searchParams }) {
           <p className='text-sm text-muted-foreground'>
             The order details will be sent to you by email.
           </p>
-          <Link href='/' className={buttonVariants()}>
-            Back Home
-          </Link>
+          <div className='buttons flex gap-4 items-center'>
+            <Link href='/dashboard' className={buttonVariants()}>
+              Dashboard
+            </Link>
+            <Link href='/' className={buttonVariants()}>
+              Back Home
+            </Link>
+          </div>
         </CardFooter>
       </Card>
     </div>

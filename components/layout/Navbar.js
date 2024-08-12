@@ -18,6 +18,9 @@ export default async function Navbar() {
       <div className='flex items-center gap-4'>
         {isLoggedIn ? (
           <div className='flex items-center gap-4'>
+            <Link href='/dashboard' className={buttonVariants()}>
+              Dashboard
+            </Link>
             <form
               action={async () => {
                 'use server';
