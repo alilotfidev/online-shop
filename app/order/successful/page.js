@@ -20,6 +20,7 @@ export default async function SuccessfulOrderPage({ searchParams }) {
   );
   const sessionData = await sessionRes.json();
   console.log({ sessionData });
+  console.log(typeof sessionData?.amount_total);
   // TODO: error handling & add images to stripe
   return (
     <div className='p-24 flex justify-center items-center'>
@@ -37,7 +38,7 @@ export default async function SuccessfulOrderPage({ searchParams }) {
           <div className='flex justify-between items-center'>
             <h4>Total Amount:</h4>
             <p className='font-bold'>
-              {sessionData?.amount_total + ' ' + sessionData?.currency}
+              {sessionData?.amount_total / 100 + ' ' + sessionData?.currency}
             </p>
           </div>
           <div>
@@ -55,7 +56,7 @@ export default async function SuccessfulOrderPage({ searchParams }) {
                     </span>
                   </div>
                   <div className='price'>
-                    Total: {item?.amount_total + ' ' + item?.currency}
+                    Total: {item?.amount_total / 100 + ' ' + item?.currency}
                   </div>
                 </div>
               ))}
