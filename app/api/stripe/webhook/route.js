@@ -9,7 +9,7 @@ export async function POST(req) {
 
   try {
     const eventJSON = await req.json();
-    console.log(eventJSON.data.object.metadata);
+    console.log(eventJSON);
 
     const event = stripe.webhooks.constructEvent(
       eventJSON,
@@ -25,7 +25,6 @@ export async function POST(req) {
         console.log('Payment successful:', succeededCharge);
         // updating the database
         const succeededOrderId = succeededCharge?.metadata?.order_id || null;
-        console.log(event.data.object);
 
         if (succeededOrderId) {
           const order = await getOrder(succeededOrderId);
