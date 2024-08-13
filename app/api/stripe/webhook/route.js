@@ -4,18 +4,25 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_KEY;
 import { getOrder, setOrderPaymentStatus } from '@/lib/contentful';
 
-export async function POST(req) {
-  const signature = req.headers['stripe-signature'];
+export const config = {
+  api: {
+    bodyParser: false, // Disable the built-in body parser
+  },
+};
 
+export async function POST(req) {
   try {
-    const eventJSON = await req.json();
-    console.log(eventJSON);
+    const rawBody = await req.text();
+
+    const signature = req.headers.get('stripe-signature');
+    console.log({ rawBody, signature, endpointSecret });
 
     const event = stripe.webhooks.constructEvent(
-      eventJSON,
+      rawBody,
       signature,
       endpointSecret
     );
+    console.log({ event });
 
     // Handle the event based on its type (e.g., charge.succeeded)
     switch (event.type) {
