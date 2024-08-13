@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_KEY;
-import { getOrder, setOrderPaymentStatus } from '@/lib/contentful';
+import { setOrderPaymentStatus } from '@/lib/contentful';
 import { headers } from 'next/headers';
 
 export async function POST(req) {
@@ -12,42 +12,26 @@ export async function POST(req) {
 
   try {
     event = stripe.webhooks.constructEvent(rawBody, signature, endpointSecret);
-    console.log({ event });
   } catch (err) {
     console.error('Webhook error:', err.message);
     return NextResponse.json({ message: 'signature error' }, { status: 400 });
   }
   switch (event.type) {
-    case 'charge.succeeded':
+    case 'checkout.session.completed':
       const succeededCharge = event.data.object;
       // send email for order completed event (to user and ourselves)
-      console.log('Payment successful:', succeededCharge);
+      // console.log('Payment successful:', succeededCharge);
       // updating the database
       const succeededOrderId = succeededCharge?.metadata?.order_id || null;
+      console.log({ succeededOrderId });
 
       if (succeededOrderId) {
-        const order = await getOrder(succeededOrderId);
-        const entryId = order?.items[0]?.sys.id || null;
-        if (entryId) {
-          setOrderPaymentStatus(entryId, true);
-        }
+        await setOrderPaymentStatus(succeededOrderId, 'paid');
+        console.log('done');
+      } else {
+        console.log('contentful error');
       }
 
-      return NextResponse.json({ message: 'success' }, { status: 200 });
-      break;
-    case 'charge.failed':
-      const failedCharge = event.data.object;
-      // send email for order completed event (to user and ourselves)
-      console.log('Payment successful:', failedCharge);
-      // updating the database
-      const failedOrderId = failedCharge?.metadata?.order_id || null;
-      if (failedOrderId) {
-        const order = await getOrder(failedOrderId);
-        const entryId = order?.items[0]?.sys.id || null;
-        if (entryId) {
-          setOrderPaymentStatus(entryId, false);
-        }
-      }
       return NextResponse.json({ message: 'success' }, { status: 200 });
       break;
     default:
