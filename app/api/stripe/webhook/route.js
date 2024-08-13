@@ -3,18 +3,13 @@ import { NextResponse } from 'next/server';
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_KEY;
 import { getOrder, setOrderPaymentStatus } from '@/lib/contentful';
-
-export const config = {
-  api: {
-    bodyParser: false, // Disable the built-in body parser
-  },
-};
+import { headers } from 'next/headers';
 
 export async function POST(req) {
   try {
     const rawBody = await req.text();
+    const signature = headers().get('stripe-signature');
 
-    const signature = req.headers.get('stripe-signature');
     console.log({ rawBody, signature, endpointSecret });
 
     const event = stripe.webhooks.constructEvent(
