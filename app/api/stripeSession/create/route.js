@@ -12,8 +12,10 @@ export async function POST(req) {
       mode: 'payment',
       success_url: `${baseUrl}/order/successful?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/order/failed?session_id={CHECKOUT_SESSION_ID}`,
-      metadata: {
-        order_id: body?.orderId,
+      payment_intent_data: {
+        metadata: {
+          order_id: body?.orderId, // here you can set the metadata
+        },
       },
     });
     return NextResponse.json({ sessionId: session.id }, { status: 200 });
