@@ -20,16 +20,11 @@ export async function POST(req) {
     case 'checkout.session.completed':
       const succeededCharge = event.data.object;
       // send email for order completed event (to user and ourselves)
-      // console.log('Payment successful:', succeededCharge);
       // updating the database
       const succeededOrderId = succeededCharge?.metadata?.order_id || null;
-      console.log({ succeededOrderId });
 
       if (succeededOrderId) {
         await setOrderPaymentStatus(succeededOrderId, 'paid');
-        console.log('done');
-      } else {
-        console.log('contentful error');
       }
 
       return NextResponse.json({ message: 'success' }, { status: 200 });
