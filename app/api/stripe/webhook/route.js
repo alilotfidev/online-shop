@@ -1,4 +1,3 @@
-// TODO: secure the webhook after live setup with stripe signature
 import { NextResponse } from 'next/server';
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_KEY;
