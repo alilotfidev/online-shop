@@ -11,7 +11,7 @@ export default async function Navbar() {
   const isLoggedIn = session?.user.email ? true : false;
 
   return (
-    <nav className='flex justify-between items-center py-8 px-12 relative'>
+    <nav className='flex justify-between items-center py-8 px-12 relative flex-col gap-4 sm:gap-0 sm:flex-row'>
       <Link href='/' className='font-bold text-2xl'>
         Fjallraven
       </Link>
